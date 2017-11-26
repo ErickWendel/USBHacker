@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DroidHacker</title>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script>
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+        var config = {
+            apiKey: "AIzaSyALK839-PCUyXClP6v-Mv9ZhE6JGh53-3Q",
+            authDomain: "saveimagetofirebase.firebaseapp.com",
+            // databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+            storageBucket: "gs://saveimagetofirebase.appspot.com",
+            // messagingSenderId: "<SENDER_ID>",
+        };
+        firebase.initializeApp(config);
+
+
+    </script>
+    <script>
+        angular.module('app', [])
+            .controller('appController', function ($scope) {
+                var vm = this;
+                vm.imagem = 'aee'
+                var storage = firebase.storage();
+                var storageRef = storage.ref();
+                var tangRef = storageRef.child('*.jpg');
+
+                tangRef.getDownloadURL().then(function (url) {
+                    debugger
+                    $('img').attr('src', url)
+                })
+                    .catch(function (error) {
+                        alert(JSON.stringify(error))
+                        switch (error.code) {
+                            case 'storage/object_not_found':
+                                break;
+
+                            case 'storage/unauthorized':
+                                break;
+
+                            case 'storage/canceled':
+                                break;
+
+                            case 'storage/unknown':
+                                break;
+                        }
+                    });
+            })
+    </script>
+</head>
+
+<body ng-controller="appController as vm" ng-cloak>
+    <img src="" alt="">
+</body>
+
+</html>
