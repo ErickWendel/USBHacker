@@ -19,34 +19,10 @@ import android.widget.Toast;
 public class DetectUSB extends BroadcastReceiver {
     private String TAG = "status....";
 
-    private AudioManager audio;
-    private MediaPlayer mp;
-    private Handler handler;
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-
-        Intent intent1 = new Intent("usb_detect");
-        context.sendBroadcast(intent1);
-
-
-        audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(10550000);
-
-
-
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
-
-
-
-
     }
-
-
 }

