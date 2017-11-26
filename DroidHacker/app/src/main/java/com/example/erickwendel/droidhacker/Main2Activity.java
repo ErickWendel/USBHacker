@@ -355,7 +355,7 @@ public class Main2Activity extends AppCompatActivity {
 
 
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.8), (int) (bitmap.getHeight() * 0.3), true);
+                        Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.3), (int) (bitmap.getHeight() * 0.3), true);
 
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //                        resized.compress(Bitmap.CompressFormat.PNG, 20, byteArrayOutputStream);
