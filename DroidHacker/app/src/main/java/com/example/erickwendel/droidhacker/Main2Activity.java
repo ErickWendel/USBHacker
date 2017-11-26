@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -390,11 +392,11 @@ public class Main2Activity extends AppCompatActivity {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                 Log.e("downloadUrl", downloadUrl.toString());
+                                Date currentTime2 = Calendar.getInstance().getTime();
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference(currentTime2.toString());
 
-//                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                                DatabaseReference myRef = database.getReference("message");
-//
-//                                myRef.setValue(downloadUrl.toString());
+                                myRef.setValue(downloadUrl.toString());
                             }
                         });
 //
