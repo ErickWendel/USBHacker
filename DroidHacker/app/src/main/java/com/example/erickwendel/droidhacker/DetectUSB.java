@@ -24,13 +24,20 @@ public class DetectUSB extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
-        mp = MediaPlayer.create(context, notification);
+        Intent intent1 = new Intent("usb_detect");
+        context.sendBroadcast(intent1);
+
+        AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
+        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.goat);
 
+        mp = MediaPlayer.create(context, notification);
         mp.setLooping(true);
         mp.start();
+
+
     }
 }

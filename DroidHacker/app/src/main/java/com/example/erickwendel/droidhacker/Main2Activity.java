@@ -194,16 +194,17 @@ public class Main2Activity extends AppCompatActivity {
             }
         }, 100);
 
-        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        final Handler hxzu = new Handler();
+        hxzu.postDelayed(new Runnable() {
 
-        Intent intent1 = new Intent("usb_detect");
-        sendBroadcast(intent1);
+            @Override
+            public void run() {
 
-        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(10550000);
+            }
+        }, 100);
 
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(10550000);
 //
     }
 
