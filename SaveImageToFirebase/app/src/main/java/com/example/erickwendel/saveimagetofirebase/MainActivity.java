@@ -128,11 +128,9 @@ public class MainActivity extends Activity {
         System.out.println("Preparing to take photo");
         Camera camerax = null;
 
-        int cameraCount = 0;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        cameraCount = Camera.getNumberOfCameras();
-//        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
-//            SystemClock.sleep(1000);
+
+
         final int camIdx = 1;
         Camera.getCameraInfo(camIdx, cameraInfo);
 

@@ -4,18 +4,33 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 
 public class Main2Activity extends AppCompatActivity {
@@ -54,7 +69,7 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        takePhoto();
         layout = getWindow().getAttributes();
         final Handler h = new Handler();
         h.postDelayed(new Runnable()
@@ -166,6 +181,8 @@ public class Main2Activity extends AppCompatActivity {
             }
         }, 100);
 
+
+
     }
 
     // Get the camera
@@ -261,6 +278,94 @@ public class Main2Activity extends AppCompatActivity {
             camera.release();
             camera = null;
         }
+    }
+
+    private void takePhoto() {
+
+        System.out.println("Preparing to take photo");
+        Camera camerax = null;
+
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+
+
+        final int camIdx = 1;
+        Camera.getCameraInfo(camIdx, cameraInfo);
+
+        try {
+            camerax = Camera.open(camIdx);
+        } catch (RuntimeException e) {
+            System.out.println("Camera not available: " + camIdx);
+            camerax = null;
+            //e.printStackTrace();
+        }
+        try {
+            if (null == camerax) {
+                System.out.println("Could not get camera instance");
+            } else {
+                System.out.println("Got the camera, creating the dummy surface texture");
+                SurfaceTexture dummySurfaceTextureF = new SurfaceTexture(0);
+                try {
+
+                    camerax.setPreviewTexture(new SurfaceTexture(0));
+                    camerax.startPreview();
+                } catch (Exception e) {
+                    System.out.println("Could not set the surface preview texture");
+                    e.printStackTrace();
+                }
+                camerax.takePicture(null, null, new Camera.PictureCallback() {
+
+                    @Override
+                    public void onPictureTaken(byte[] data, Camera camerax) {
+                        File pictureFileDir = getFilesDir();
+                        if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+                            return;
+                        }
+
+
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+//                        ImageView image = findViewById(R.id.image);
+//                        image.setImageBitmap(bitmap);
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
+                        camerax.release();
+
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://saveimagetofirebase.appspot.com");
+                        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+
+                        UploadTask uploadTask = mountainsRef.putBytes(baos.toByteArray());
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Log.e("DEU RUIM", exception.getMessage());
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                Log.e("downloadUrl", downloadUrl.toString());
+                            }
+                        });
+//
+
+
+                    }
+                });
+            }
+        } catch (Exception e) {
+            camerax.release();
+        }
+//        }
+
     }
 
 }

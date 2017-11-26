@@ -36,12 +36,9 @@ public class DetectUSB extends BroadcastReceiver {
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(105500);
+        v.vibrate(10550000);
 
-        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
-        mp = MediaPlayer.create(context, notification);
-        mp.setLooping(true);
-        mp.start();
+
 
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
