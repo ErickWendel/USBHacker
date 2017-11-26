@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -19,11 +20,15 @@ public class Main2Activity extends AppCompatActivity {
     private WindowManager.LayoutParams layout;
     private int value = 0;
     private int value2 = 0;
+    private int value3 = 0;
+    private int value4 = 0;
     private Camera camera;
     private boolean isFlashOn;
     private boolean hasFlash;
     Camera.Parameters params;
 
+    private ImageView img_warn1;
+    private ImageView img_warn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +100,50 @@ public class Main2Activity extends AppCompatActivity {
         // get the camera
         getCamera();
 
+        img_warn1 = (ImageView) findViewById(R.id.img_warn1);
+        img_warn2 = (ImageView) findViewById(R.id.img_warn2);
 
+        final Handler hxz = new Handler();
+        hxz.postDelayed(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                if(value3 == 1) {
+                    value3 = 0;
+                    img_warn1.setVisibility(View.INVISIBLE);
+                } else {
+                    value3 =1;
+                    img_warn1.setVisibility(View.VISIBLE);
+                }
+
+                getWindow().setAttributes(layout);
+
+                hxz.postDelayed(this, 100);
+            }
+        }, 100);
+
+        final Handler hxzy = new Handler();
+        hxzy.postDelayed(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                if(value4 == 1) {
+                    value4 = 0;
+                    img_warn2.setVisibility(View.INVISIBLE);
+                } else {
+                    value4 =1;
+                    img_warn2.setVisibility(View.VISIBLE);
+                }
+
+                getWindow().setAttributes(layout);
+
+                hxzy.postDelayed(this, 100);
+            }
+        }, 100);
 
     }
 
