@@ -31,8 +31,6 @@ public class DetectUSB extends BroadcastReceiver {
         Intent intent1 = new Intent("usb_detect");
         context.sendBroadcast(intent1);
 
-        Toast.makeText(context, "USB CONECTADO", Toast.LENGTH_SHORT).show();
-
 
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
@@ -44,7 +42,7 @@ public class DetectUSB extends BroadcastReceiver {
         mp = MediaPlayer.create(context, notification);
         mp.setLooping(true);
         mp.start();
-        
+
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
 
