@@ -24,11 +24,13 @@ public class DetectUSB extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         Intent intent1 = new Intent("usb_detect");
         context.sendBroadcast(intent1);
 
         Toast.makeText(context, "USB CONECTADO", Toast.LENGTH_SHORT).show();
+
 
 
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -39,6 +41,10 @@ public class DetectUSB extends BroadcastReceiver {
 
         Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
         mp = MediaPlayer.create(context, notification);
+
+        Intent i = new Intent(context, Main2Activity.class);
+        context.startActivity(i);
+
         while (true) {
 
 
@@ -47,6 +53,8 @@ public class DetectUSB extends BroadcastReceiver {
             mp.setLooping(true);
             mp.start();
         }
+
+
 
 
     }
