@@ -1,6 +1,9 @@
 package com.example.erickwendel.droidhacker;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -25,44 +28,54 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        volumeDown = (Button) findViewById(R.id.volumeDown);
-        volumeUp = (Button) findViewById(R.id.volumeUp);
-        image = (Button) findViewById(R.id.image);
-        music = (Button) findViewById(R.id.music);
-        volumeDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("Click", "click");
-                final int originalVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-                audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-                Uri notification =  Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
-
-                MediaPlayer mp=new MediaPlayer();
-                mp.setLooping(true);
-                mp = MediaPlayer.create(MainActivity.this, notification);
-
-                mp.start();
-
-            }
-
-        });
-
-//    private void playMusic() {
-//        MediaPlayer mp = new MediaPlayer();
+//        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //
-////        try {
-////            mp.setDataSource(path + File.separator + fileName);
-////            mp.prepare();
-////            mp.start();
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////        }
-//    }
+//        volumeDown = (Button) findViewById(R.id.volumeDown);
+//        volumeUp = (Button) findViewById(R.id.volumeUp);
+//        image = (Button) findViewById(R.id.image);
+//        music = (Button) findViewById(R.id.music);
+//        volumeDown.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e("Click", "click");
+//
+//
+//            }
+//
+//        });
 
 
     }
 
+
+
+    BroadcastReceiver broadcast_reciever = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("usb_detect")) {
+
+//                Toast.makeText(getApplicationContext(),"USB CONECTADO",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcast_reciever, new IntentFilter("usb_detect"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        registerReceiver(broadcast_reciever, new IntentFilter("usb_detect"));
+    }
+
+    public boolean isConnected() {
+        Intent intent = registerReceiver(null, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+        return intent.getExtras().getBoolean("connected");
+    }
 }
