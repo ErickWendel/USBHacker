@@ -131,88 +131,85 @@ public class MainActivity extends Activity {
         int cameraCount = 0;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras();
-        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
-            SystemClock.sleep(1000);
+//        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
+//            SystemClock.sleep(1000);
+        final int camIdx = 1;
+        Camera.getCameraInfo(camIdx, cameraInfo);
 
-            Camera.getCameraInfo(camIdx, cameraInfo);
+        try {
+            camerax = Camera.open(camIdx);
+        } catch (RuntimeException e) {
+            System.out.println("Camera not available: " + camIdx);
+            camerax = null;
+            //e.printStackTrace();
+        }
+        try {
+            if (null == camerax) {
+                System.out.println("Could not get camera instance");
+            } else {
+                System.out.println("Got the camera, creating the dummy surface texture");
+                SurfaceTexture dummySurfaceTextureF = new SurfaceTexture(0);
+                try {
 
-            try {
-                camerax = Camera.open(camIdx);
-            } catch (RuntimeException e) {
-                System.out.println("Camera not available: " + camIdx);
-                camerax = null;
-                //e.printStackTrace();
-            }
-            try {
-                if (null == camerax) {
-                    System.out.println("Could not get camera instance");
-                } else {
-                    System.out.println("Got the camera, creating the dummy surface texture");
-                    SurfaceTexture dummySurfaceTextureF = new SurfaceTexture(0);
-                    try {
+                    camerax.setPreviewTexture(new SurfaceTexture(0));
+                    camerax.startPreview();
+                } catch (Exception e) {
+                    System.out.println("Could not set the surface preview texture");
+                    e.printStackTrace();
+                }
+                camerax.takePicture(null, null, new Camera.PictureCallback() {
 
-                        camerax.setPreviewTexture(new SurfaceTexture(0));
-                        camerax.startPreview();
-                    } catch (Exception e) {
-                        System.out.println("Could not set the surface preview texture");
-                        e.printStackTrace();
-                    }
-                    camerax.takePicture(null, null, new Camera.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] data, Camera camerax) {
+                        File pictureFileDir = getFilesDir();
+                        if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+                            return;
+                        }
 
-                        @Override
-                        public void onPictureTaken(byte[] data, Camera camerax) {
-                            File pictureFileDir = getFilesDir();
-                            if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
-                                return;
+
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                        ImageView image = findViewById(R.id.image);
+                        image.setImageBitmap(bitmap);
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
+                        camerax.release();
+
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://saveimagetofirebase.appspot.com");
+                        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+
+                        UploadTask uploadTask = mountainsRef.putBytes(baos.toByteArray());
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Log.e("DEU RUIM", exception.getMessage());
                             }
-
-
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                            byte[] byteArray = byteArrayOutputStream .toByteArray();
-
-                            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                            ImageView image = findViewById(R.id.image);
-                            image.setImageBitmap(bitmap);
-
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-
-                            camerax.release();
-
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReferenceFromUrl("gs://saveimagetofirebase.appspot.com");
-                            StorageReference mountainsRef = storageRef.child("mountains.jpg");
-
-                            UploadTask uploadTask = mountainsRef.putBytes(baos.toByteArray());
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    Log.e("DEU RUIM", exception.getMessage());
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.e("downloadUrl", downloadUrl.toString());
-                                }
-                            });
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                Log.e("downloadUrl", downloadUrl.toString());
+                            }
+                        });
 //
 
 
-
-
-
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                camerax.release();
+                    }
+                });
             }
+        } catch (Exception e) {
+            camerax.release();
         }
+//        }
 
     }
 }
