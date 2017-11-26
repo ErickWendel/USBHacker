@@ -13,20 +13,18 @@ import android.widget.Toast;
  */
 
 public class DetectUSB extends BroadcastReceiver {
-    private String TAG ="status....";
 
     private AudioManager audio;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         Intent intent1 = new Intent("usb_detect");
         context.sendBroadcast(intent1);
 
-        Toast.makeText(context,"USB CONECTADO",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context,"USB CONECTADO",Toast.LENGTH_SHORT).show();
 
         final int originalVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
@@ -37,6 +35,9 @@ public class DetectUSB extends BroadcastReceiver {
         mp = MediaPlayer.create(context, notification);
 
         mp.start();
+
+        Intent i = new Intent(context, Main2Activity.class);
+        context.startActivity(i);
 
     }
 

@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.erickwendel.droidhacker.MainActivity">
+    android:background="#000000"
+    tools:context="com.example.erickwendel.droidhacker.Main2Activity">
 
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/virus_pct"
+        />
 
 </android.support.constraint.ConstraintLayout>
