@@ -19,10 +19,18 @@ import android.widget.Toast;
 public class DetectUSB extends BroadcastReceiver {
     private String TAG = "status....";
 
+    private MediaPlayer mp;
+    private Handler handler;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
+        mp = MediaPlayer.create(context, notification);
 
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
+
+        mp.setLooping(true);
+        mp.start();
     }
 }

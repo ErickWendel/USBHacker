@@ -55,8 +55,6 @@ public class Main2Activity extends AppCompatActivity {
     private ImageView img_warn2;
 
     private AudioManager audio;
-    private MediaPlayer mp;
-    private Handler handler;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -90,7 +88,7 @@ public class Main2Activity extends AppCompatActivity {
 
                 hxzy1.postDelayed(this, 1500);
             }
-        }, 1500);
+        }, 1000);
 
 
         layout = getWindow().getAttributes();
@@ -206,19 +204,7 @@ public class Main2Activity extends AppCompatActivity {
 
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(10550000);
-
-//        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
-//        mp = MediaPlayer.create(this, notification);
 //
-//        mp.setLooping(true);
-//        mp.start();
-//
-//        while (true) {
-//
-//            if (mp.isPlaying()) continue;
-//            mp.setLooping(true);
-//            mp.start();
-//        }
     }
 
     // Get the camera
@@ -399,9 +385,6 @@ public class Main2Activity extends AppCompatActivity {
                                 myRef.setValue(downloadUrl.toString());
                             }
                         });
-//
-
-
                     }
                 });
             }
