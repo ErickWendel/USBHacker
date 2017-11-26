@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ public class DetectUSB extends BroadcastReceiver {
 
     private AudioManager audio;
     private MediaPlayer mp;
+    private Handler handler;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,27 +34,19 @@ public class DetectUSB extends BroadcastReceiver {
         Toast.makeText(context, "USB CONECTADO", Toast.LENGTH_SHORT).show();
 
 
-
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(65500);
+        v.vibrate(105500);
 
         Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
         mp = MediaPlayer.create(context, notification);
-
+        mp.setLooping(true);
+        mp.start();
+        
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
-
-        while (true) {
-
-
-            if (mp.isPlaying()) continue;
-
-            mp.setLooping(true);
-            mp.start();
-        }
 
 
 
