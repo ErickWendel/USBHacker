@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "http-server . ",
     "preinstall": "npm i -g http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

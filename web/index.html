@@ -7,10 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>DroidHacker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <style>
+        .text-center {
+            text-align: center;
+        }
+
         img {
-            transform: rotate(270deg);
-            padding: 61px;
+            /* transform: rotate(270deg); */
         }
     </style>
     <script src="bower_components/angular/angular.min.js"></script>
@@ -48,7 +52,10 @@
                             $scope.images = [];
                             return;
                         }
-                        const values = Object.values(snapshot.val())
+                        const items = snapshot.val()
+                        const values = Object.keys(items).map(item => {
+                            return { key: new Date(item).toISOString(), value: items[item] }
+                        })
                         $scope.message = ''
                         $scope.images = values
                     });
@@ -59,13 +66,86 @@
 </head>
 
 <body ng-controller="appController" ng-cloak>
-    <div class="container">
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">USBHacker</a>
+            </div>
+
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <div class="card" style="width: 20rem;">
+                        <img class="card-img-top img-responsive" src="./erick.jpg" alt="Card image cap">
+                        <div class="card-block text-center">
+                            <h4 class="card-title">Erick Wendel</h4>
+                            <p class="card-text">
+                                <p class="list-group-item-text">erickwendel.com.br</p>
+                                <p class="list-group-item-text">github.com/erickwendel</p>
+                                <p class="list-group-item-text">fb.com/page.erickwendel</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <img class="card-img-top img-responsive img-rounded" src="./erick-catossi.jpg" alt="Card image cap">
+
+                    <p class="card-text">
+                        <p class="list-group-item-text text-center">https://github.com/ErickWendel/USBHacker</p>
+                        <p class="list-group-item-text text-center">https://usbhacker.herokuapp.com</p>
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card" style="width: 20rem;">
+                        <img class="card-img-top img-responsive" src="./catossi.jpg" alt="Card image cap">
+                        <div class="card-block text-center">
+                            <h4 class="card-title ">Matheus Catossi</h4>
+                            <p class="card-text">
+                                <p class="list-group-item-text">br.linkedin.com/in/matheuscatossi</p>
+                                <p class="list-group-item-text">github.com/matheuscatossi</p>
+                                <p class="list-group-item-text">fb.com/matheuscatossi</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
         <span ng-if="message != ''" class="text-success"> {{message}}</span>
         <div ng-repeat="item in images">
 
             <div class="gallery_product  col-md-4">
-                <img ng-src="{{item}}" class="img-responsive" width="300" height="300">
-
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h5>{{item.key}}</h5>
+                            </div>
+                            <div class="panel-body">
+                                <img ng-src="{{item.value}}" class="img-responsive" width="300" height="300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
