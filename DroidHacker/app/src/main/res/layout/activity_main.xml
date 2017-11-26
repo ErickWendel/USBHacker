@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.erickwendel.droidhacker.MainActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:id="@+id/volumeUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volume UP" />
+
+            <Button
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:id="@+id/volumeDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volume DOWN" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image"/>
+
+            <Button
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:id="@+id/music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Music"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RUNNER"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>
