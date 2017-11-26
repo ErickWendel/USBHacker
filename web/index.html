@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>DroidHacker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        img {
+            transform: rotate(270deg);
+            padding: 61px;
+        }
+    </style>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -16,9 +23,7 @@
         var config = {
             apiKey: "AIzaSyALK839-PCUyXClP6v-Mv9ZhE6JGh53-3Q",
             authDomain: "saveimagetofirebase.firebaseapp.com",
-            // databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-            storageBucket: "gs://saveimagetofirebase.appspot.com",
-            // messagingSenderId: "<SENDER_ID>",
+            databaseURL: "https://saveimagetofirebase.firebaseio.com"
         };
         firebase.initializeApp(config);
 
@@ -27,38 +32,43 @@
     <script>
         angular.module('app', [])
             .controller('appController', function ($scope) {
-                var vm = this;
-                vm.imagem = 'aee'
+                $scope.images = []
+                $scope.message = 'Loading...';
                 var storage = firebase.storage();
-                var storageRef = storage.ref();
-                var tangRef = storageRef.child('*.jpg');
+                var database = firebase.database();
 
-                tangRef.getDownloadURL().then(function (url) {
-                    debugger
-                    $('img').attr('src', url)
-                })
-                    .catch(function (error) {
-                        alert(JSON.stringify(error))
-                        switch (error.code) {
-                            case 'storage/object_not_found':
-                                break;
+                var databaseRef = database.ref();
+                databaseRef.on('value', function (snapshot) {
+                    console.log('chegou novos items!', snapshot.val())
 
-                            case 'storage/unauthorized':
-                                break;
+                    $scope.$apply(function () {
+                        if (!snapshot.val()) {
+                            $scope.message = 'Não há items!'
 
-                            case 'storage/canceled':
-                                break;
-
-                            case 'storage/unknown':
-                                break;
+                            $scope.images = [];
+                            return;
                         }
+                        const values = Object.values(snapshot.val())
+                        $scope.message = ''
+                        $scope.images = values
                     });
+
+                });
             })
     </script>
 </head>
 
-<body ng-controller="appController as vm" ng-cloak>
-    <img src="" alt="">
+<body ng-controller="appController" ng-cloak>
+    <div class="container">
+        <span ng-if="message != ''" class="text-success"> {{message}}</span>
+        <div ng-repeat="item in images">
+
+            <div class="gallery_product  col-md-4">
+                <img ng-src="{{item}}" class="img-responsive" width="300" height="300">
+
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
