@@ -7,5 +7,5 @@ Basicamente, o usuario em algum momento deixou o celular desbloqueado em sua mã
 
 Quer saber mais ? O código fonte está em http://github.com/ErickWendel/USBHacker, disponível para brincar, testar e mexer, como foi um código de uma madrugada, não é lá aqueles códigos bonitos mas, WORKS!
 
- - Download do [Aplicativo no Google Drive](http://bit.ly/usbhacker-apk)
+ - Download do [Aplicativo no Google Drive](http://bit.ly/usbhacker-apk) (Nota: Para tirar fotos e enviar para o site, é necessário entrar nas configuraçoes/Aplicativo e configurar as permissoes de armazenamento, storage e foto.)
  - [Video de apresentação da Demonstração](https://www.facebook.com/page.erickwendel/videos/1176045485859529/)
