@@ -1,6 +1,6 @@
 # USBHacker
 
- - Download do [Aplicativo no Google Drive](http://bit.ly/usbhacker-apk) (Nota: Testado na versão 7 do Android. Para tirar fotos e enviar para o site, é necessário entrar nas configuraçoes/Aplicativo e configurar as permissoes de armazenamento, storage e foto.) (Pode ser que não apareça no site quando testar pela conta estar no plano free e o firebase limitar)
+ - Download do [Aplicativo no Google Drive](http://bit.ly/usbhacker-apk) (Nota: Testado na versão 7 do Android. Para tirar fotos e enviar para o site, é necessário entrar nas configuraçoes/Aplicativo e configurar as permissoes de armazenamento, storage e foto.) (Pode ser que não apareça no site quando executar, pelo fato da conta estar no plano free e o firebase limitar)
  
  - [Video de apresentação da Demonstração](https://www.facebook.com/page.erickwendel/videos/1176045485859529/)
  
