@@ -32,7 +32,7 @@ public class DetectUSB extends BroadcastReceiver {
 
         Intent i = new Intent(context, Main2Activity.class);
         context.startActivity(i);
-        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.goat);
+        Uri notification = Uri.parse("android.resource://com.example.erickwendel.droidhacker/" + R.raw.gemidao);
 
         mp = MediaPlayer.create(context, notification);
         mp.setLooping(true);
